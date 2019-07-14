@@ -1,0 +1,80 @@
+{
+  "name": "asset-projection",
+  "version": "0.0.1",
+  "description": "A collection of utilities to project financials",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run lint && npm run compile && npm run test",
+    "compile": "tsc",
+    "lint": "tslint --project .",
+    "test": "jest",
+    "start": "tsc --watch",
+    "debug-tests": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
+    "coverage": "coverage\\lcov-report\\index.html"
+  },
+  "files": [
+    "dist/**",
+    "!**/*.unit.*",
+    "!dist/src/mocks/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "TBD"
+  },
+  "author": "Gergely Kota",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "src/.*\\.unit\\.ts",
+    "testPathIgnorePatterns": [
+      "\\node_modules\\",
+      "\\dist\\",
+      "\\mocks\\"
+    ],
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "src/mocks/*"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "testURL": "http://localhost"
+  }
+}

@@ -1,0 +1,128 @@
+Move this to GitHub
+Make workitems for the below - 
+Keep cranking
+
+
+Big infra things missing:
+- Property
+- RentalProperty (or is this just a Property and an IIncomeStream?)
+- SocialSecurity
+- Cost
+- Baby is-a Cost
+
+- Model driver (some REPL API)
+- critical dates, eg: an income stream ends when a job ends, not all needs() pull from the Income (some pull from Cash/Investments/Prioritized list?)
+- snapshots?
+- A ui over the model driver. 
+
+
+
+------------------------------------------------------------------------------------------
+
+Make: 
+Cash, Investment, Job, Cost
+Then start the basic engine to show income over time, vs costs, vs total value, and how stopping a job works.
+Then, fill out additional asset classes and incorporate them into the model. 
+Repeat.
+
+
+
+
+Globals:
+   Rate of inflation
+   ... 
+
+Streams: // IAsset
+   eg: Rental property, Investments, cash, income, spending
+
+   constructor(initialSettings) // depends on asset type
+   tick() // rolls forward one unit of time (year? month? what is my granularity)
+   value() // dynamic calculation of the value right now (based on tick)
+   contribute(dollars) // can be negative - deposit/withdraw could be useful here for tax-interesting cases
+   needs(): number // account requires money. Pairs with produces
+   cash(): number // how many net dollars are in here, for liquid summary purposes
+   liquidate(): Cash - this may not be the same as value() due to penalties, overheads, etc
+
+------------------------------------
+Property implements IAsset {
+   constructor(balance, rate, pAndI, insurance, propertyTax, rateOfGrowth...);
+   tick() // aggregate the above
+   contribute(dollars) // money in would go to principal, money out would remove from non-drip. throws on attempt to pull non-existent funds
+   marketValue { get; set; } // overrides tick-based counter
+}
+RentalProperty extends Property {
+   constructor(... , income, overhead, rateOfGrowth, drip) { super( ... ) } 
+   tick() // ... overrides Property's
+   produces(): number // zero if drip, else the difference
+}
+------------------------------------
+_401K implements IAsset { // extends Investment - this is now a MaturingInvestment
+   constructor(balance, rate, ticksTilMature); 
+   tick(); // matures ... 
+   value(); 
+   isMature(): boolean // enough ticks yet?
+   contribute(dollars)
+   cash(): number // zero before maturity
+   liquidate(): Cash // consider penalties
+}
+Roth implements IAsset { // extends Investment - this is now hooked up as a post-tax account. Can be maturing or not
+   constructor(balance, rate, ticksTilMature)
+   tick() // matures ... 
+   value()
+   isMature(): boolean
+   contribute(dollars)
+}
+SocialSecurity implements IAsset {
+   ... 
+}
+HSA implements IAsset {
+   constructor(balance, rate, ... )
+   tick()
+   value()
+   // how do we model future costs? Or do we just show the balance?
+}
+Investments implements IAsset { - done
+   constructor(balance, rate)
+   tick(); // compute growth
+   contribute(dollars) // move money into the investment
+}
+Cash implements IAsset { - done
+   constructor(balance);
+   tick() // no-op
+   value()
+   contribute(dollars)
+   marketValue { get; set throws }
+   cash() // same as value
+   liquidate() // returns self
+}
+-----------------------------------
+Job implements IAsset { - IIncomeStream, and Income aggregator
+   constructor(income, incomeGrowth)
+   link401k(_401kAccount) // so it can handle pre/post-tax moneys
+   linkCash(cashAccount)
+   marketValue { throws }
+   tick() // produces cash
+   cash() // returns zero? or should we not link the cash account
+   liquidate() // throws? produces zero?
+}
+----------------------------------
+Cost implements IAsset {
+   constructor(current costs) // does not include Property, those are already handled   
+   needs(): number // based on current costs, and scale these up
+   produces(): 0
+   tick() // scale by inflation
+   liquidate() // stop? hmm. 
+}
+Baby extends Cost { 
+   ... 
+}
+
+Grab 4578 from LR. Post to FB randoms?
+Play with 4664 to get just the 3 faces
+Play with 4676 to focus on the path
+Play with 2738 from the Palouse set
+
+
+
+
+
