@@ -2,7 +2,7 @@ This project implements a bunch of financial vehicles that can then be combined 
 There is not yet a direct plan to do end-to-end scenarios, the goal is just a set of APIs to facilitate e2e analysis.
 
 Concepts:
-Everything is centered around an IAsset that builds a tick-based conditional model. A tick is standardized to be 1 month, because it's unusual for long-term planning to need more granularity than that. The model uses ticks (as opposed to point-in-time) because the idea is to map the motion of assets per month. With a point-in-time model, the burden is placed on both the engine to track time directly, as well as on the IAsset developer to support arbitrary time windows. In other words, a monthly tick-based model seems to be a good simplification of reality for consumer and developer alike. 
+Everything is centered around an IAsset that builds a tick-based conditional model. A tick is standardized to be 1 month, because it's unusual for long-term planning to need more granularity than that. The model uses ticks (as opposed to point-in-time) because the idea is to map the motion of assets per month. With a point-in-time model, the burden is placed on both the engine to track time directly, as well as on the IAsset developer to support arbitrary time windows. In other words, a monthly tick-based model seems to be a good simplification of reality for consumer and developer alike. All operations should be done in present-day money.
 
 There are a large set of IAsset implementations. Each takes necessary initial data through its constructor, and can of course expand on functionality as desired. Some of the existing IAssets are:
 1. Salary - a monthly salary, possibly with growth factored in
